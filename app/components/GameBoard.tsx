@@ -65,11 +65,11 @@ export default function GameBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-2 sm:p-4">
       <div className="max-w-4xl mx-auto">
         {/* Заголовок */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">🎯 Домино</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-gray-900">🎯 Домино</h1>
           <div className="flex gap-3">
             <button
               onClick={undoLastAction}
@@ -88,27 +88,27 @@ export default function GameBoard() {
         </div>
 
         {/* Таблица команд */}
-        <div className="space-y-4">
+        <div className="space-y-2">
           {teams.map((team) => (
-            <div key={team.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div key={team.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
               {/* Информация о команде */}
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-3">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">{team.name}</h3>
-                  <p className="text-3xl font-bold text-purple-600">{team.score} очков</p>
+                  <h3 className="text-lg font-semibold text-gray-900">{team.name}</h3>
+                  <p className="text-2xl font-bold text-purple-600">{team.score} очков</p>
                 </div>
               </div>
 
               {/* Кнопки фиксированных очков */}
-              <div className="mb-4">
-                <p className="text-sm font-medium text-gray-700 mb-3">Фиксированные очки:</p>
-                <div className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+              <div className="mb-3">
+                <p className="text-sm font-medium text-gray-700 mb-2">Фиксированные очки:</p>
+                <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-7">
                   {fixedPoints.map((points) => (
                     <button
                       key={points}
                       onClick={() => addPoints(team.id, points, 'fixed')}
                       className={`
-                        py-2 px-3 rounded-lg font-medium transition-colors text-sm
+                        py-1.5 px-2.5 rounded-lg font-medium transition-colors text-sm
                         ${
                           points === 35
                             ? 'bg-red-100 hover:bg-red-200 text-red-700 border border-red-200'
@@ -124,7 +124,7 @@ export default function GameBoard() {
 
               {/* Дополнительные очки */}
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-3">
+                <p className="text-sm font-medium text-gray-700 mb-2">
                   Дополнительные очки (округление до кратного 5):
                 </p>
                 <div className="flex gap-2">
@@ -134,12 +134,12 @@ export default function GameBoard() {
                     value={customPoints[team.id] || ''}
                     onChange={(e) => handleCustomInputChange(team.id, e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleCustomPoints(team.id)}
-                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                   <button
                     onClick={() => handleCustomPoints(team.id)}
                     disabled={!customPoints[team.id] || customPoints[team.id].trim() === ''}
-                    className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
                   >
                     Добавить
                   </button>
@@ -156,9 +156,9 @@ export default function GameBoard() {
 
         {/* История действий */}
         {history.length > 0 && (
-          <div className="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-            <h3 className="font-medium text-gray-900 mb-3">📋 История игры:</h3>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
+          <div className="mt-4 bg-white rounded-2xl shadow-sm border border-gray-100 p-3">
+            <h3 className="font-medium text-gray-900 mb-2">📋 История игры:</h3>
+            <div className="space-y-1 max-h-28 overflow-y-auto">
               {history.slice(-5).reverse().map((action) => {
                 const team = teams.find((t) => t.id === action.teamId);
                 return (
