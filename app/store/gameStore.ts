@@ -69,8 +69,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   addPoints: (teamId: number, points: number, type: 'fixed' | 'custom') => {
     const { teams, history } = get();
 
-    // Если это +35, показываем диалог подтверждения
-    if (points === 35) {
+    // Если это +35 И это фиксированные очки (кнопка), показываем диалог подтверждения
+    if (points === 35 && type === 'fixed') {
       set({
         showConfirmDialog: true,
         pendingAction: { teamId, points },
