@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 import { useGameStore } from '../store/gameStore';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function GameSetup() {
   const [selectedTeamCount, setSelectedTeamCount] = useState<number>(2);
   const [teamNames, setTeamNames] = useState<string[]>(['', '', '', '']);
   const initializeGame = useGameStore((state) => state.initializeGame);
+  const { t } = useLanguage();
 
   const teamOptions = [2, 3, 4];
 
@@ -18,19 +21,24 @@ export default function GameSetup() {
 
   const handleStartGame = () => {
     const relevantTeamNames = teamNames.slice(0, selectedTeamCount);
-    initializeGame(selectedTeamCount, relevantTeamNames);
+    const teamPrefix = t('setup.teamPlaceholder');
+    initializeGame(selectedTeamCount, relevantTeamNames, teamPrefix);
   };
 
   return (
     <div className="h-screen bg-gray-50 flex items-center justify-center p-2">
       <div className="w-full max-w-md">
-        {/* Заголовок */}
+        {/* Заголовок и переключатель языка */}
         <div className="text-center mb-4">
+          <div className="flex justify-between items-start mb-2">
+            <div></div>
+            <LanguageSwitcher />
+          </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            🎯 Домино
+            {t('app.title')}
           </h1>
           <p className="text-sm text-gray-600">
-            Выберите количество команд для начала игры
+            {t('setup.subtitle')}
           </p>
         </div>
 
@@ -39,7 +47,7 @@ export default function GameSetup() {
           {/* Выбор команд */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Количество команд
+              {t('setup.teamCount')}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {teamOptions.map((count) => (
@@ -57,7 +65,7 @@ export default function GameSetup() {
                 >
                   <div className="text-xl font-bold">{count}</div>
                   <div className="text-xs mt-0.5">
-                    команды
+                    {t('setup.teams')}
                   </div>
                 </button>
               ))}
@@ -67,14 +75,14 @@ export default function GameSetup() {
           {/* Названия команд */}
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Названия команд (необязательно)
+              {t('setup.teamNames')}
             </label>
             <div className="space-y-2">
               {Array.from({ length: selectedTeamCount }, (_, i) => (
                 <div key={i}>
                   <input
                     type="text"
-                    placeholder={`Команда ${i + 1}`}
+                    placeholder={`${t('setup.teamPlaceholder')} ${i + 1}`}
                     value={teamNames[i]}
                     onChange={(e) => handleTeamNameChange(i, e.target.value)}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all text-sm"
@@ -84,18 +92,18 @@ export default function GameSetup() {
               ))}
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              Оставьте пустым для названий по умолчанию
+              {t('setup.emptyHint')}
             </p>
           </div>
 
           {/* Информация о правилах */}
           <div className="bg-gray-50 rounded-lg p-3 mb-3">
-            <h3 className="font-medium text-gray-900 mb-1 text-sm">📝 Правила:</h3>
+            <h3 className="font-medium text-gray-900 mb-1 text-sm">{t('setup.rules')}</h3>
             <ul className="text-xs text-gray-600 space-y-0.5">
-              <li>• Очки: +5, +10, +15, +20, +25, +30, +35</li>
-              <li>• При +35 команда побеждает</li>
-              <li>• Доп. очки округляются до кратного 5</li>
-              <li>• Можно отменять действия</li>
+              <li>{t('setup.rulesPoint1')}</li>
+              <li>{t('setup.rulesPoint2')}</li>
+              <li>{t('setup.rulesPoint3')}</li>
+              <li>{t('setup.rulesPoint4')}</li>
             </ul>
           </div>
 
@@ -104,7 +112,7 @@ export default function GameSetup() {
             onClick={handleStartGame}
             className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
-            Начать игру
+            {t('button.startGame')}
           </button>
         </div>
       </div>

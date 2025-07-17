@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useGameStore } from '../store/gameStore';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function GameBoard() {
   const {
@@ -13,6 +15,7 @@ export default function GameBoard() {
     undoLastAction,
     roundUpToNearest5,
   } = useGameStore();
+  const { t } = useLanguage();
 
   const [customPoints, setCustomPoints] = useState<{ [key: number]: string }>({});
 
@@ -47,13 +50,13 @@ export default function GameBoard() {
           <div className={`bg-white rounded-xl shadow-sm border border-gray-100 ${isCompact ? 'p-6' : 'p-8'}`}>
             <div className={`${isCompact ? 'text-4xl mb-3' : 'text-6xl mb-4'}`}>🏆</div>
             <h1 className={`font-bold text-gray-900 ${isCompact ? 'text-2xl mb-2' : 'text-3xl mb-3'}`}>
-              Победитель!
+              {t('game.winner')}
             </h1>
             <p className={`text-purple-600 font-semibold ${isCompact ? 'text-lg mb-1' : 'text-xl mb-2'}`}>
               {winner.name}
             </p>
             <p className={`text-gray-600 ${isCompact ? 'mb-4' : 'mb-6'}`}>
-              Финальный счёт: {winner.score} очков
+              {t('game.finalScore')} {winner.score} {t('game.points')}
             </p>
             
             <button
@@ -62,7 +65,7 @@ export default function GameBoard() {
                 isCompact ? 'py-3 px-4' : 'py-4 px-6'
               }`}
             >
-              Новая игра
+              {t('button.newGame')}
             </button>
           </div>
         </div>
@@ -75,8 +78,9 @@ export default function GameBoard() {
       <div className="max-w-4xl mx-auto h-full flex flex-col">
         {/* Заголовок */}
         <div className={`flex justify-between items-center ${isCompact ? 'mb-2' : 'mb-4'}`}>
-          <h1 className={`font-bold text-gray-900 ${isCompact ? 'text-lg' : 'text-2xl'}`}>🎯 Домино</h1>
-          <div className={`flex ${isCompact ? 'gap-2' : 'gap-3'}`}>
+          <h1 className={`font-bold text-gray-900 ${isCompact ? 'text-lg' : 'text-2xl'}`}>{t('app.title')}</h1>
+          <div className={`flex items-center ${isCompact ? 'gap-2' : 'gap-3'}`}>
+            <LanguageSwitcher />
             <button
               onClick={undoLastAction}
               disabled={history.length === 0}
@@ -84,7 +88,7 @@ export default function GameBoard() {
                 isCompact ? 'px-3 py-1 text-sm' : 'px-4 py-2 text-base'
               }`}
             >
-              ↶ Отменить
+              {t('button.undo')}
             </button>
             <button
               onClick={resetGame}
@@ -92,7 +96,7 @@ export default function GameBoard() {
                 isCompact ? 'px-3 py-1 text-sm' : 'px-4 py-2 text-base'
               }`}
             >
-              🔄 Сброс
+              {t('button.reset')}
             </button>
           </div>
         </div>
@@ -105,13 +109,13 @@ export default function GameBoard() {
               <div className={`flex justify-between items-center ${isCompact ? 'mb-2' : 'mb-4'}`}>
                 <div>
                   <h3 className={`font-semibold text-gray-900 ${isCompact ? 'text-base' : 'text-xl'}`}>{team.name}</h3>
-                  <p className={`font-bold text-purple-600 ${isCompact ? 'text-xl' : 'text-3xl'}`}>{team.score} очков</p>
+                  <p className={`font-bold text-purple-600 ${isCompact ? 'text-xl' : 'text-3xl'}`}>{team.score} {t('game.points')}</p>
                 </div>
               </div>
 
               {/* Кнопки фиксированных очков */}
               <div className={isCompact ? 'mb-2' : 'mb-4'}>
-                <p className={`font-medium text-gray-700 ${isCompact ? 'text-xs mb-1' : 'text-sm mb-3'}`}>Фиксированные очки:</p>
+                <p className={`font-medium text-gray-700 ${isCompact ? 'text-xs mb-1' : 'text-sm mb-3'}`}>{t('game.fixedPoints')}</p>
                 <div className={`grid grid-cols-7 ${isCompact ? 'gap-1' : 'gap-2'}`}>
                   {fixedPoints.map((points) => (
                     <button
@@ -136,12 +140,12 @@ export default function GameBoard() {
               {/* Дополнительные очки */}
               <div>
                 <p className={`font-medium text-gray-700 ${isCompact ? 'text-xs mb-1' : 'text-sm mb-2'}`}>
-                  Дополнительные очки:
+                  {t('game.customPoints')}
                 </p>
                 <div className={`flex ${isCompact ? 'gap-1' : 'gap-2'}`}>
                   <input
                     type="number"
-                    placeholder="Очки..."
+                    placeholder={t('game.pointsPlaceholder')}
                     value={customPoints[team.id] || ''}
                     onChange={(e) => handleCustomInputChange(team.id, e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleCustomPoints(team.id)}
@@ -156,12 +160,12 @@ export default function GameBoard() {
                       isCompact ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'
                     }`}
                   >
-                    {isCompact ? '+' : 'Добавить'}
+                    {isCompact ? '+' : t('button.add')}
                   </button>
                 </div>
                 {customPoints[team.id] && customPoints[team.id].trim() !== '' && (
                   <p className={`text-gray-500 ${isCompact ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}>
-                    {parseInt(customPoints[team.id]) || 0} → +{roundUpToNearest5(parseInt(customPoints[team.id]) || 0)} очков
+                    {parseInt(customPoints[team.id]) || 0} → +{roundUpToNearest5(parseInt(customPoints[team.id]) || 0)} {t('game.points')}
                   </p>
                 )}
               </div>
@@ -177,7 +181,7 @@ export default function GameBoard() {
             {isCompact ? (
               // Компактная версия - только последнее действие
               <div className="flex justify-between text-xs text-gray-600">
-                <span className="font-medium">Последнее:</span>
+                <span className="font-medium">{t('game.latest')}</span>
                 {(() => {
                   const lastAction = history[history.length - 1];
                   const team = teams.find((t) => t.id === lastAction.teamId);
@@ -191,15 +195,15 @@ export default function GameBoard() {
             ) : (
               // Расширенная версия - несколько последних действий
               <div>
-                <h3 className="font-medium text-gray-900 mb-2 text-sm">📋 Последние действия:</h3>
+                <h3 className="font-medium text-gray-900 mb-2 text-sm">{t('game.lastActions')}</h3>
                 <div className="space-y-1 max-h-20 overflow-y-auto">
                   {history.slice(-3).reverse().map((action) => {
                     const team = teams.find((t) => t.id === action.teamId);
                     return (
                       <div key={action.id} className="text-sm text-gray-600 flex justify-between">
                         <span>
-                          {team?.name}: +{action.points} очков
-                          {action.type === 'custom' && ' (доп.)'}
+                          {team?.name}: +{action.points} {t('game.points')}
+                          {action.type === 'custom' && ` ${t('game.additional')}`}
                         </span>
                         <span className="text-gray-400 text-xs">
                           {new Date(action.timestamp).toLocaleTimeString()}

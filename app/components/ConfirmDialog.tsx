@@ -1,6 +1,7 @@
 'use client';
 
 import { useGameStore } from '../store/gameStore';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ConfirmDialog() {
   const {
@@ -10,6 +11,7 @@ export default function ConfirmDialog() {
     confirmWinningAction,
     cancelWinningAction,
   } = useGameStore();
+  const { t } = useLanguage();
 
   if (!showConfirmDialog || !pendingAction) return null;
 
@@ -22,10 +24,10 @@ export default function ConfirmDialog() {
         <div className="text-center mb-6">
           <div className="text-6xl mb-4">🏆</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Завершение игры
+            {t('confirm.gameEnd')}
           </h2>
           <p className="text-gray-600">
-            Команда получает +35 очков и побеждает!
+            {t('confirm.winDescription')}
           </p>
         </div>
 
@@ -36,10 +38,10 @@ export default function ConfirmDialog() {
               {team?.name}
             </h3>
             <p className="text-purple-700">
-              Текущий счёт: {team?.score} очков
+              {t('confirm.currentScore')} {team?.score} {t('game.points')}
             </p>
             <p className="text-lg font-bold text-purple-900 mt-2">
-              Финальный счёт: {(team?.score || 0) + 35} очков
+              {t('confirm.finalScore')} {(team?.score || 0) + 35} {t('game.points')}
             </p>
           </div>
         </div>
@@ -50,10 +52,10 @@ export default function ConfirmDialog() {
             <div className="text-amber-600 text-xl mr-3">⚠️</div>
             <div>
               <h4 className="font-medium text-amber-900 mb-1">
-                Внимание!
+                {t('confirm.warning')}
               </h4>
               <p className="text-sm text-amber-700">
-                После подтверждения игра будет завершена и эта команда станет победителем.
+                {t('confirm.warningText')}
               </p>
             </div>
           </div>
@@ -65,13 +67,13 @@ export default function ConfirmDialog() {
             onClick={cancelWinningAction}
             className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors"
           >
-            Отмена
+            {t('button.cancel')}
           </button>
           <button
             onClick={confirmWinningAction}
             className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-colors"
           >
-            Подтвердить
+            {t('button.confirm')}
           </button>
         </div>
       </div>

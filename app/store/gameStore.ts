@@ -24,7 +24,7 @@ interface GameState {
   pendingAction: { teamId: number; points: number } | null;
 
   // Действия
-  initializeGame: (teamCount: number, teamNames?: string[]) => void;
+  initializeGame: (teamCount: number, teamNames?: string[], teamPrefix?: string) => void;
   addPoints: (teamId: number, points: number, type: 'fixed' | 'custom') => void;
   confirmWinningAction: () => void;
   cancelWinningAction: () => void;
@@ -43,10 +43,11 @@ export const useGameStore = create<GameState>((set, get) => ({
   pendingAction: null,
 
   // Инициализация игры
-  initializeGame: (teamCount: number, teamNames?: string[]) => {
+  initializeGame: (teamCount: number, teamNames?: string[], teamPrefix?: string) => {
+    const defaultPrefix = teamPrefix || 'Команда';
     const teams: Team[] = Array.from({ length: teamCount }, (_, i) => ({
       id: i + 1,
-      name: teamNames?.[i]?.trim() || `Команда ${i + 1}`,
+      name: teamNames?.[i]?.trim() || `${defaultPrefix} ${i + 1}`,
       score: 0,
     }));
 
