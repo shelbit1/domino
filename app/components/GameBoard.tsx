@@ -13,7 +13,6 @@ export default function GameBoard() {
     resetGame,
     addPoints,
     undoLastAction,
-    roundUpToNearest5,
   } = useGameStore();
   const { t } = useLanguage();
 
@@ -32,8 +31,8 @@ export default function GameBoard() {
     const points = parseInt(inputValue);
     if (isNaN(points) || points <= 0) return;
 
-    const roundedPoints = roundUpToNearest5(points);
-    addPoints(teamId, roundedPoints, 'custom');
+    // Записываем точное значение без округления для ручного ввода
+    addPoints(teamId, points, 'custom');
     
     // Очищаем поле ввода
     setCustomPoints(prev => ({ ...prev, [teamId]: '' }));
@@ -165,7 +164,7 @@ export default function GameBoard() {
                 </div>
                 {customPoints[team.id] && customPoints[team.id].trim() !== '' && (
                   <p className={`text-gray-500 ${isCompact ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}>
-                    {parseInt(customPoints[team.id]) || 0} → +{roundUpToNearest5(parseInt(customPoints[team.id]) || 0)} {t('game.points')}
+                    +{parseInt(customPoints[team.id]) || 0} {t('game.points')}
                   </p>
                 )}
               </div>
